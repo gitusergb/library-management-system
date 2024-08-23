@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAVnMzf-VSr96Eu2Twtd8cL7527rWrDRISQw&usqp=CAU" />
+    <meta name="theme-color" content="#000000" />
+    <meta name="description" content="Web server created using express" />
+    <link rel="apple-touch-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAVnMzf-VSr96Eu2Twtd8cL7527rWrDRISQw&usqp=CAU" />
+    <title>Library Management System with Audit Logging | server</title>
+    <style>
+        /* Outer container */
+        #outer {
+            height:auto;
+            background-image: url(https://i.ibb.co/NWJdpbY/lmsys.jpg);
+            background-size: cover;
+            border-radius: 10px;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Inner content container */
+        #inner {
+            color: rgb(53, 50, 50);
+            margin: 0 5px;
+            width: 80%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.096);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Navigation menu */
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Bookshelf and books styling */
+        #bookshelf {
+            margin-top: 50px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* Shelf container */
+        .shelf {
+            width: 80%;
+            max-width: 1000px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: space-evenly;
+            background-color: #eeebe96b;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Individual book styling */
+        .book {
+            width: 60px;
+            height: 210px;
+            background-color: #704924f8;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(34, 34, 34, 0.2);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        /* Hover effect for books */
+        .book:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Book title styling */
+        .book-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fffcfc;
+            margin-bottom: 8px;
+        }
+
+        /* Book author styling */
+        .book-author {
+            font-size: 14px;
+            color: #f7e19b;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="outer">
+        <div id="inner">
+            <h2>Library Management System with Audit Logging</h2>
+            <nav>
+                <a href="https://m-labrary.onrender.com/books">Books</a>
+            </nav>
+        </div>
+        <!-- Bookshelf -->
+        <div id="bookshelf">
+            <div class="shelf" id="shelf">
+                <!-- Books will be dynamically added here -->
+            </div>
+        </div>
+ 
+    </div>
+
+    
+
+    <script>
+        // Append a book element to the shelf
+        function addBookToShelf(book) {
+            const shelf = document.getElementById('shelf');
+            const bookDiv = document.createElement('div');
+            bookDiv.className = 'book';
+
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'book-title';
+            titleDiv.textContent = book.title;
+
+            const hrDiv = document.createElement('hr');
+
+            const authorDiv = document.createElement('div');
+            authorDiv.className = 'book-author';
+            authorDiv.textContent = book.author;
+
+            bookDiv.appendChild(titleDiv);
+            bookDiv.appendChild(hrDiv);
+            bookDiv.appendChild(authorDiv);
+
+            shelf.appendChild(bookDiv);
+        }
+
+        // Fetch books from the API and add them to the shelf
+        fetch('https://m-labrary.onrender.com/books')
+            .then(response => response.json())
+            .then(books => {
+                console.log(books.books);
+                books.books.forEach(book => {
+                    addBookToShelf(book);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching books:', error);
+            });
+    </script>
+</body>
+
+</html>
