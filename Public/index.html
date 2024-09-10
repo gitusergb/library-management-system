@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -110,16 +111,29 @@
                 <a href="https://library-management-system-ouul.onrender.com/books">Books</a>
             </nav>
         </div>
+        
+        <!-- Add Book Form -->
+        <div id="addBookForm">
+            <h3>Add a Book</h3>
+            <input type="text" id="title" placeholder="Book Title" />
+            <input type="text" id="author" placeholder="Author" />
+            <button onclick="addBook()">Add Book</button>
+        </div>
+        
+        <!-- Search Book -->
+        <div id="searchBookForm">
+            <h3>Search for a Book</h3>
+            <input type="text" id="searchQuery" placeholder="Search by title or author" />
+            <button onclick="searchBook()">Search</button>
+        </div>
+
         <!-- Bookshelf -->
         <div id="bookshelf">
             <div class="shelf" id="shelf">
                 <!-- Books will be dynamically added here -->
             </div>
         </div>
- 
     </div>
-
-    
 
     <script>
         // Append a book element to the shelf
@@ -138,9 +152,17 @@
             authorDiv.className = 'book-author';
             authorDiv.textContent = book.author;
 
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.onclick = function() {
+                deleteBook(book._id);
+                bookDiv.remove();
+            };
+
             bookDiv.appendChild(titleDiv);
             bookDiv.appendChild(hrDiv);
             bookDiv.appendChild(authorDiv);
+            bookDiv.appendChild(deleteButton);
 
             shelf.appendChild(bookDiv);
         }
@@ -149,7 +171,6 @@
         fetch('https://library-management-system-ouul.onrender.com/books')
             .then(response => response.json())
             .then(books => {
-                console.log(books.books);
                 books.books.forEach(book => {
                     addBookToShelf(book);
                 });
@@ -157,6 +178,53 @@
             .catch(error => {
                 console.error('Error fetching books:', error);
             });
+
+        // Add a new book
+        function addBook() {
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            
+            const newBook = { title, author };
+            addBookToShelf(newBook);
+
+            // Optionally send to backend
+            fetch('https://library-management-system-ouul.onrender.com/books/addbook', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newBook)
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error adding book:', error));
+        }
+
+        // Delete a book
+        function deleteBook(bookID) {
+            // Optionally send delete request to backend
+            fetch(`https://library-management-system-ouul.onrender.com/books/delete/:bookID`, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error deleting book:', error));
+        }
+
+        // Search for a book
+        function searchBook() {
+            const query = document.getElementById('searchQuery').value.toLowerCase();
+            const books = document.querySelectorAll('.book');
+
+            books.forEach(book => {
+                const title = book.querySelector('.book-title').textContent.toLowerCase();
+                const author = book.querySelector('.book-author').textContent.toLowerCase();
+                
+                if (title.includes(query) || author.includes(query)) {
+                    book.style.display = 'flex';
+                } else {
+                    book.style.display = 'none';
+                }
+            });
+        }
     </script>
 </body>
 
