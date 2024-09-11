@@ -1,6 +1,6 @@
 
 
-# Library Management System with Audit Logging
+# Library Management System 
 
 Welcome to the Library Management System! This project provides a backend API built using Node.js, Express.js, and MongoDB, along with a simple frontend interface to manage books, authors, and users, including borrowing and returning books. It also features an audit logging system to track user actions with timestamps and filtering options.
 
