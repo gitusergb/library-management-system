@@ -8,6 +8,7 @@
     <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAVnMzf-VSr96Eu2Twtd8cL7527rWrDRISQw&usqp=CAU" />
     <meta name="theme-color" content="#000000" />
     <meta name="description" content="Web server created using express" />
+    <link rel="stylesheet" href="./index.css">
     <link rel="apple-touch-icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRAVnMzf-VSr96Eu2Twtd8cL7527rWrDRISQw&usqp=CAU" />
     <title>Library Management System | server</title>
     <style>
@@ -110,121 +111,63 @@
             <nav>
                 <a href="https://library-management-system-ouul.onrender.com/books">Books</a>
             </nav>
-        </div>
-        
-        <!-- Add Book Form -->
-        <div id="addBookForm">
-            <h3>Add a Book</h3>
-            <input type="text" id="title" placeholder="Book Title" />
-            <input type="text" id="author" placeholder="Author" />
-            <button onclick="addBook()">Add Book</button>
-        </div>
-        
-        <!-- Search Book -->
+                <!-- Search Book -->
         <div id="searchBookForm">
-            <h3>Search for a Book</h3>
-            <input type="text" id="searchQuery" placeholder="Search by title or author" />
+            <input type="text" id="searchQuery" placeholder="Search Book by title or author,byisbn,ID ..." />
             <button onclick="searchBook()">Search</button>
         </div>
 
+        </div>
+
+        <div id="mainContainer">
+            <!-- Add Book Form Section -->
+            <div id="leftSection">
+            <!-- Toggle Button -->
+            <button id="toggleFormButton" onclick="toggleForm()">New Book</button>
+        <!-- Add Book Form -->
+        <div id="addBookSection">
+            <h4>Add a Book</h4>
+            <form id="addBookForm">
+            
+              <span for="title">Title:</span>
+              <input type="text" id="title" name="title" placeholder="" required><br>
+          
+              <span for="author">Author:</span>
+              <input type="text" id="author" name="author" placeholder="" required><br>
+          
+              <span for="isbn">ISBN:</span>
+              <input type="text" id="isbn" name="isbn" placeholder="" required><br>
+          
+              <span for="description">Description:</span>
+              <textarea id="description" name="description" placeholder=""></textarea><br>
+          
+              <span for="publishedDate">Published Date:</span>
+              <input type="date" id="publishedDate" name="publishedDate" placeholder=""><br>
+          
+              <span for="category">Category:</span>
+              <input type="text" id="category" name="category" placeholder="" required><br>
+          
+              <span for="price">Price:</span>
+              <input type="number" id="price" name="price" placeholder="" required><br>
+          
+              <span for="quantity">Quantity:</span>
+              <input type="number" id="quantity" name="quantity" value="1" ><br>
+          
+              <button type="submit">Add Book</button>
+            </form>
+          </div>
+        </div>
+          <div id="rightSection">
         <!-- Bookshelf -->
         <div id="bookshelf">
             <div class="shelf" id="shelf">
                 <!-- Books will be dynamically added here -->
             </div>
         </div>
+        </div>
     </div>
-
-    <script>
-        // Append a book element to the shelf
-        function addBookToShelf(book) {
-            const shelf = document.getElementById('shelf');
-            const bookDiv = document.createElement('div');
-            bookDiv.className = 'book';
-
-            const titleDiv = document.createElement('div');
-            titleDiv.className = 'book-title';
-            titleDiv.textContent = book.title;
-
-            const hrDiv = document.createElement('hr');
-
-            const authorDiv = document.createElement('div');
-            authorDiv.className = 'book-author';
-            authorDiv.textContent = book.author;
-
-            const deleteButton = document.createElement('button');
-            deleteButton.textContent = 'Delete';
-            deleteButton.onclick = function() {
-                deleteBook(book._id);
-                bookDiv.remove();
-            };
-
-            bookDiv.appendChild(titleDiv);
-            bookDiv.appendChild(hrDiv);
-            bookDiv.appendChild(authorDiv);
-            bookDiv.appendChild(deleteButton);
-
-            shelf.appendChild(bookDiv);
-        }
-
-        // Fetch books from the API and add them to the shelf
-        fetch('https://library-management-system-ouul.onrender.com/books')
-            .then(response => response.json())
-            .then(books => {
-                books.books.forEach(book => {
-                    addBookToShelf(book);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching books:', error);
-            });
-
-        // Add a new book
-        function addBook() {
-            const title = document.getElementById('title').value;
-            const author = document.getElementById('author').value;
-            
-            const newBook = { title, author };
-            addBookToShelf(newBook);
-
-            // Optionally send to backend
-            fetch('https://library-management-system-ouul.onrender.com/books/addbook', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newBook)
-            })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error adding book:', error));
-        }
-
-        // Delete a book
-        function deleteBook(bookID) {
-            // Optionally send delete request to backend
-            fetch(`https://library-management-system-ouul.onrender.com/books/delete/:bookID`, {
-                method: 'DELETE'
-            })
-            .then(response => response.json())
-            .then(data => console.log(data))
-            .catch(error => console.error('Error deleting book:', error));
-        }
-
-        // Search for a book
-        function searchBook() {
-            const query = document.getElementById('searchQuery').value.toLowerCase();
-            const books = document.querySelectorAll('.book');
-
-            books.forEach(book => {
-                const title = book.querySelector('.book-title').textContent.toLowerCase();
-                const author = book.querySelector('.book-author').textContent.toLowerCase();
-                
-                if (title.includes(query) || author.includes(query)) {
-                    book.style.display = 'flex';
-                } else {
-                    book.style.display = 'none';
-                }
-            });
-        }
+</div>
+    <script src="./index.js">
     </script>
 </body>
 
